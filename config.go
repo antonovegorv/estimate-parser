@@ -1,4 +1,4 @@
-package estimate
+package estimateparser
 
 const (
 	// ConfigEstimateProject ...
@@ -22,11 +22,11 @@ const (
 	// ConfigEstimateClientAddress ...
 	ConfigEstimateClientAddress = "ESTIMATE.CLIENT.ADDRESS"
 
-	// DetailedEstimateSheetName ...
-	DetailedEstimateSheetName = "ПОДРОБНАЯ СМЕТА"
+	// DefaultDetailedEstimateSheetName ...
+	DefaultDetailedEstimateSheetName = "ПОДРОБНАЯ СМЕТА"
 
-	// SimplifiedEstimateSheetName ...
-	SimplifiedEstimateSheetName = "ПРОСТАЯ СМЕТА"
+	// DefaultSimplifiedEstimateSheetName ...
+	DefaultSimplifiedEstimateSheetName = "ПРОСТАЯ СМЕТА"
 
 	// DefaultBlockStartCellValue ...
 	DefaultBlockStartCellValue = "НАИМЕНОВАНИЕ"
@@ -38,31 +38,31 @@ const (
 // DefaultEstimateConfig ...
 var DefaultEstimateConfig = EstimateConfig{
 	ConfigEstimateProject: EstimateConfigItem{
-		sheet: SimplifiedEstimateSheetName,
+		sheet: DefaultSimplifiedEstimateSheetName,
 		cell:  "C4",
 	},
 	ConfigEstimateAuthor: EstimateConfigItem{
-		sheet: SimplifiedEstimateSheetName,
+		sheet: DefaultSimplifiedEstimateSheetName,
 		cell:  "A7",
 	},
 	ConfigEstimateCreateDt: EstimateConfigItem{
-		sheet: DetailedEstimateSheetName,
+		sheet: DefaultDetailedEstimateSheetName,
 		cell:  "I9",
 	},
 	ConfigEstimateClientFullName: EstimateConfigItem{
-		sheet: SimplifiedEstimateSheetName,
+		sheet: DefaultSimplifiedEstimateSheetName,
 		cell:  "C1",
 	},
 	ConfigEstimateClientPhone: EstimateConfigItem{
-		sheet: SimplifiedEstimateSheetName,
+		sheet: DefaultSimplifiedEstimateSheetName,
 		cell:  "C3",
 	},
 	ConfigEstimateClientEmail: EstimateConfigItem{
-		sheet: SimplifiedEstimateSheetName,
+		sheet: DefaultSimplifiedEstimateSheetName,
 		cell:  "C3",
 	},
 	ConfigEstimateClientAddress: EstimateConfigItem{
-		sheet: SimplifiedEstimateSheetName,
+		sheet: DefaultSimplifiedEstimateSheetName,
 		cell:  "C2",
 	},
 }

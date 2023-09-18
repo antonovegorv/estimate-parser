@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/antonovegorv/estimate-parser/estimate"
 	"github.com/shopspring/decimal"
 	"github.com/xuri/excelize/v2"
 )
@@ -28,7 +27,7 @@ type EstimateParser struct {
 	detailedEstimateSheetName   string
 	simplifiedEstimateSheetName string
 
-	estimateConfig estimate.EstimateConfig
+	estimateConfig EstimateConfig
 }
 
 // NewEstimateParser ...
@@ -36,7 +35,7 @@ func NewEstimateParser(options ...Option) *EstimateParser {
 	e := &EstimateParser{
 		detailedEstimateSheetName:   _defaultDetailedEstimateSheetName,
 		simplifiedEstimateSheetName: _defaultSimplifiedEstimateSheetName,
-		estimateConfig:              estimate.DefaultEstimateConfig,
+		estimateConfig:              DefaultEstimateConfig,
 	}
 
 	for _, opt := range options {
@@ -47,7 +46,7 @@ func NewEstimateParser(options ...Option) *EstimateParser {
 }
 
 // ParseFromReader ...
-func (ep *EstimateParser) ParseFromReader(r io.Reader) (*estimate.Estimate, error) {
+func (ep *EstimateParser) ParseFromReader(r io.Reader) (*Estimate, error) {
 	var err error
 
 	ep.file, err = excelize.OpenReader(r)
@@ -68,10 +67,10 @@ func (ep *EstimateParser) ParseFromReader(r io.Reader) (*estimate.Estimate, erro
 	return e, nil
 }
 
-func (ep *EstimateParser) getEstimate() (*estimate.Estimate, error) {
+func (ep *EstimateParser) getEstimate() (*Estimate, error) {
 	var (
 		err error
-		e   = &estimate.Estimate{}
+		e   = &Estimate{}
 	)
 
 	e.Project, err = ep.getEstimateProject()
@@ -104,9 +103,9 @@ func (ep *EstimateParser) getEstimate() (*estimate.Estimate, error) {
 
 // getEstimateProject ...
 func (ep *EstimateParser) getEstimateProject() (string, error) {
-	v, ok := ep.estimateConfig[estimate.ConfigEstimateProject]
+	v, ok := ep.estimateConfig[ConfigEstimateProject]
 	if !ok {
-		return "", fmt.Errorf("no key in estimate config: %v", estimate.ConfigEstimateProject)
+		return "", fmt.Errorf("no key in estimate config: %v", ConfigEstimateProject)
 	}
 
 	cell, err := ep.file.GetCellValue(v.Sheet(), v.Cell())
@@ -119,9 +118,9 @@ func (ep *EstimateParser) getEstimateProject() (string, error) {
 
 // getEstimateAuthor ...
 func (ep *EstimateParser) getEstimateAuthor() (string, error) {
-	v, ok := ep.estimateConfig[estimate.ConfigEstimateAuthor]
+	v, ok := ep.estimateConfig[ConfigEstimateAuthor]
 	if !ok {
-		return "", fmt.Errorf("no key in estimate config: %v", estimate.ConfigEstimateProject)
+		return "", fmt.Errorf("no key in estimate config: %v", ConfigEstimateProject)
 	}
 
 	cell, err := ep.file.GetCellValue(v.Sheet(), v.Cell())
@@ -134,9 +133,9 @@ func (ep *EstimateParser) getEstimateAuthor() (string, error) {
 
 // getEstimateCreateDt ...
 func (ep *EstimateParser) getEstimateCreateDt() (time.Time, error) {
-	v, ok := ep.estimateConfig[estimate.ConfigEstimateCreateDt]
+	v, ok := ep.estimateConfig[ConfigEstimateCreateDt]
 	if !ok {
-		return time.Time{}, fmt.Errorf("no key in estimate config: %v", estimate.ConfigEstimateCreateDt)
+		return time.Time{}, fmt.Errorf("no key in estimate config: %v", ConfigEstimateCreateDt)
 	}
 
 	cell, err := ep.file.GetCellValue(v.Sheet(), v.Cell())
@@ -147,10 +146,10 @@ func (ep *EstimateParser) getEstimateCreateDt() (time.Time, error) {
 	return time.Parse("01-02-06", cell)
 }
 
-func (ep *EstimateParser) getEstimateClient() (*estimate.Client, error) {
+func (ep *EstimateParser) getEstimateClient() (*Client, error) {
 	var (
 		err error
-		c   = &estimate.Client{}
+		c   = &Client{}
 	)
 
 	c.FullName, err = ep.getEstimateClientFullName()
@@ -178,9 +177,9 @@ func (ep *EstimateParser) getEstimateClient() (*estimate.Client, error) {
 
 // getEstimateClientFullName ...
 func (ep *EstimateParser) getEstimateClientFullName() (string, error) {
-	v, ok := ep.estimateConfig[estimate.ConfigEstimateClientFullName]
+	v, ok := ep.estimateConfig[ConfigEstimateClientFullName]
 	if !ok {
-		return "", fmt.Errorf("no key in estimate config: %v", estimate.ConfigEstimateProject)
+		return "", fmt.Errorf("no key in estimate config: %v", ConfigEstimateProject)
 	}
 
 	cell, err := ep.file.GetCellValue(v.Sheet(), v.Cell())
@@ -195,9 +194,9 @@ func (ep *EstimateParser) getEstimateClientFullName() (string, error) {
 func (ep *EstimateParser) getEstimateClientPhone() (string, error) {
 	var phone string
 
-	v, ok := ep.estimateConfig[estimate.ConfigEstimateClientPhone]
+	v, ok := ep.estimateConfig[ConfigEstimateClientPhone]
 	if !ok {
-		return "", fmt.Errorf("no key in estimate config: %v", estimate.ConfigEstimateProject)
+		return "", fmt.Errorf("no key in estimate config: %v", ConfigEstimateProject)
 	}
 
 	cell, err := ep.file.GetCellValue(v.Sheet(), v.Cell())
@@ -219,9 +218,9 @@ func (ep *EstimateParser) getEstimateClientPhone() (string, error) {
 func (ep *EstimateParser) getEstimateClientEmail() (string, error) {
 	var email string
 
-	v, ok := ep.estimateConfig[estimate.ConfigEstimateClientPhone]
+	v, ok := ep.estimateConfig[ConfigEstimateClientPhone]
 	if !ok {
-		return "", fmt.Errorf("no key in estimate config: %v", estimate.ConfigEstimateProject)
+		return "", fmt.Errorf("no key in estimate config: %v", ConfigEstimateProject)
 	}
 
 	cell, err := ep.file.GetCellValue(v.Sheet(), v.Cell())
@@ -241,9 +240,9 @@ func (ep *EstimateParser) getEstimateClientEmail() (string, error) {
 
 // getEstimateClientAddress ...
 func (ep *EstimateParser) getEstimateClientAddress() (string, error) {
-	v, ok := ep.estimateConfig[estimate.ConfigEstimateClientAddress]
+	v, ok := ep.estimateConfig[ConfigEstimateClientAddress]
 	if !ok {
-		return "", fmt.Errorf("no key in estimate config: %v", estimate.ConfigEstimateProject)
+		return "", fmt.Errorf("no key in estimate config: %v", ConfigEstimateProject)
 	}
 
 	cell, err := ep.file.GetCellValue(v.Sheet(), v.Cell())
@@ -255,16 +254,16 @@ func (ep *EstimateParser) getEstimateClientAddress() (string, error) {
 }
 
 // getEstimateBlocks ...
-func (ep *EstimateParser) getEstimateBlocks() ([]*estimate.Block, error) {
+func (ep *EstimateParser) getEstimateBlocks() ([]*Block, error) {
 	blocksInfo, err := ep.getEstimateBlocksInfo()
 	if err != nil {
 		return nil, err
 	}
 
-	blocks := make([]*estimate.Block, 0, len(blocksInfo))
+	blocks := make([]*Block, 0, len(blocksInfo))
 
 	for _, bi := range blocksInfo {
-		blocks = append(blocks, &estimate.Block{})
+		blocks = append(blocks, &Block{})
 
 		for i := bi.start; i <= bi.end; i++ {
 			rt, err := ep.getEstimateRowType(i)
@@ -311,7 +310,7 @@ func (ep *EstimateParser) getEstimateBlocksInfo() ([]blockInfo, error) {
 		row := ep.rows[i]
 
 		if len(row) > 0 {
-			if row[0] == estimate.DefaultBlockStartCellValue {
+			if row[0] == DefaultBlockStartCellValue {
 				if hasBlockStarted {
 					return nil, fmt.Errorf("block has already started")
 				}
@@ -323,7 +322,7 @@ func (ep *EstimateParser) getEstimateBlocksInfo() ([]blockInfo, error) {
 				})
 			}
 
-			if row[0] == estimate.DefaultBlockEndCellValue {
+			if row[0] == DefaultBlockEndCellValue {
 				if !hasBlockStarted {
 					return nil, fmt.Errorf("block was not started")
 				}
@@ -374,7 +373,7 @@ func (ep *EstimateParser) getEstimateRowType(row int) (RowType, error) {
 }
 
 // enrichBlocksWithTitle ...
-func (ep *EstimateParser) enrichBlocksWithTitle(blocks []*estimate.Block, row int) error {
+func (ep *EstimateParser) enrichBlocksWithTitle(blocks []*Block, row int) error {
 	mostRecentBlock := blocks[len(blocks)-1]
 
 	mostRecentBlock.Title = strings.TrimSpace(ep.rows[row][0])
@@ -383,7 +382,7 @@ func (ep *EstimateParser) enrichBlocksWithTitle(blocks []*estimate.Block, row in
 }
 
 // enrichBlocksWithProcess ...
-func (ep *EstimateParser) enrichBlocksWithProcess(blocks []*estimate.Block, row int) error {
+func (ep *EstimateParser) enrichBlocksWithProcess(blocks []*Block, row int) error {
 	mostRecentBlock := blocks[len(blocks)-1]
 
 	name := strings.TrimSpace(ep.rows[row][0])
@@ -399,7 +398,7 @@ func (ep *EstimateParser) enrichBlocksWithProcess(blocks []*estimate.Block, row 
 		// return err
 	}
 
-	process := estimate.Process{
+	process := Process{
 		Name:      name,
 		Unit:      unit,
 		Number:    number,
@@ -412,7 +411,7 @@ func (ep *EstimateParser) enrichBlocksWithProcess(blocks []*estimate.Block, row 
 }
 
 // enrichBlocksWithMaterial ...
-func (ep *EstimateParser) enrichBlocksWithMaterial(blocks []*estimate.Block, row int) error {
+func (ep *EstimateParser) enrichBlocksWithMaterial(blocks []*Block, row int) error {
 	mostRecentBlock := blocks[len(blocks)-1]
 
 	mostRecentProcess := mostRecentBlock.Processes[len(mostRecentBlock.Processes)-1]
@@ -430,7 +429,7 @@ func (ep *EstimateParser) enrichBlocksWithMaterial(blocks []*estimate.Block, row
 		// return err
 	}
 
-	material := estimate.Material{
+	material := Material{
 		Name:   name,
 		Unit:   unit,
 		Number: number,

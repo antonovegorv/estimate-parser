@@ -31,8 +31,8 @@ type EstimateParser struct {
 	estimateConfig estimate.EstimateConfig
 }
 
-// NewEstimateParserFromReader ...
-func NewEstimateParserFromReader(options ...Option) *EstimateParser {
+// NewEstimateParser ...
+func NewEstimateParser(options ...Option) *EstimateParser {
 	e := &EstimateParser{
 		detailedEstimateSheetName:   _defaultDetailedEstimateSheetName,
 		simplifiedEstimateSheetName: _defaultSimplifiedEstimateSheetName,
@@ -94,6 +94,11 @@ func (ep *EstimateParser) getEstimate() (*estimate.Estimate, error) {
 		return nil, err
 	}
 
+	e.Blocks, err = ep.getEstimateBlocks()
+	if err != nil {
+		return nil, err
+	}
+
 	return e, nil
 }
 
@@ -139,7 +144,7 @@ func (ep *EstimateParser) getEstimateCreateDt() (time.Time, error) {
 		return time.Time{}, err
 	}
 
-	return time.Parse("02-01-06", cell)
+	return time.Parse("01-02-06", cell)
 }
 
 func (ep *EstimateParser) getEstimateClient() (*estimate.Client, error) {

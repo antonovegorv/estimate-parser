@@ -1,4 +1,4 @@
-package estimateparser
+package parser
 
 import (
 	"os"

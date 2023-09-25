@@ -1,4 +1,4 @@
-package estimateparser
+package parser
 
 // RowType ...
 type RowType uint8

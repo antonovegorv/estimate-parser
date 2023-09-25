@@ -1,4 +1,4 @@
-package estimateparser
+package parser
 
 type Option func(*EstimateParser)
 
